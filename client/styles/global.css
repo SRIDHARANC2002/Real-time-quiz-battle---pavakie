@@ -1,0 +1,52 @@
+/* Global Styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Arial', sans-serif;
+  background-color: #f4f4f4;
+  color: #333;
+}
+
+.app {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+button {
+  cursor: pointer;
+}
+
+input {
+  padding: 10px;
+  margin: 10px 0;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+/* Page Styles */
+.home-page, .create-room-page, .join-room-page, .leaderboard-page, .match-history-page {
+  text-align: center;
+  margin-top: 50px;
+}
+
+.quiz-room {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.leaderboard-list, .matches-list {
+  margin-top: 20px;
+}
+
+.match-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+  border-bottom: 1px solid #ccc;
+}
