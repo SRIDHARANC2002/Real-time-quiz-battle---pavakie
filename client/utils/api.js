@@ -2,7 +2,7 @@ import axios from 'axios';
 import { storage } from './storage';
 
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api',
+  baseURL: import.meta.env.VITE_API_BASE_URL || 'https://real-time-quiz-battle-pavakie.onrender.com/api',
 });
 
 // Log API base URL for debugging

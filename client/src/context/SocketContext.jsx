@@ -16,7 +16,7 @@ export const SocketProvider = ({ children }) => {
       return
     }
 
-    const socketUrl = import.meta.env.VITE_SOCKET_URL || 'http://localhost:5000'
+    const socketUrl = import.meta.env.VITE_SOCKET_URL || 'https://real-time-quiz-battle-pavakie.onrender.com'
     
     const s = io(socketUrl, {
       auth: { token: user?.token },
