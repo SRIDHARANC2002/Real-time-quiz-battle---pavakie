@@ -9,7 +9,7 @@ const axios = require('axios');
  */
 async function generateQuizQuestions(topic, numQuestions = 10) {
   try {
-    const prompt = `Generate exactly ${numQuestions} quiz questions about "${topic}".
+    const prompt = `Generate exactly ${numQuestions} quiz questions about "${topic}". 
 
 Each question must have:
 - A clear question text
@@ -70,13 +70,13 @@ Example:
     } catch (apiError) {
       // If the endpoint doesn't work, try alternative approach
       console.log('First endpoint failed, trying alternative...', apiError.message);
-
+      
       // Alternative: Try using Puter's public API if available
       // Since Puter.js works client-side, we might need to proxy through our own endpoint
       // For now, throw the original error
       throw apiError;
     }
-
+    
     if (!aiAnswer) {
       console.error('Puter API response structure:', JSON.stringify(puterResponse?.data, null, 2));
       throw new Error('No response text from Puter API. Check server console for response structure. You may need to check Puter API documentation for the correct endpoint.');
@@ -101,7 +101,7 @@ Example:
     }
 
     const questions = JSON.parse(jsonText);
-
+    
     // Validate structure
     if (!Array.isArray(questions)) {
       throw new Error('Response is not an array');
@@ -121,28 +121,28 @@ Example:
   } catch (error) {
     console.error('Error generating quiz questions:', error);
     console.error('Error details:', JSON.stringify(error, null, 2));
-
+    
     const errorString = JSON.stringify(error).toLowerCase();
     const errorMessage = error.message?.toLowerCase() || '';
-
+    
     // Check for authentication errors
-    if (error.response?.status === 401 ||
-        errorMessage.includes('api key') ||
+    if (error.response?.status === 401 || 
+        errorMessage.includes('api key') || 
         errorMessage.includes('api_key') ||
         errorMessage.includes('authentication') ||
         errorMessage.includes('unauthorized')) {
       throw new Error('Puter API authentication failed. Please check the API configuration.');
     }
-
+    
     // Check for model/endpoint errors
     if (error.response?.status === 404) {
       throw new Error('Puter API endpoint not found. The API endpoint may need to be updated. Check https://docs.puter.com/ for the correct endpoint.');
     }
-
+    
     // Check for quota/rate limit errors
-    if (error.response?.status === 429 ||
+    if (error.response?.status === 429 || 
         error.response?.status === 402 ||
-        errorMessage.includes('quota') ||
+        errorMessage.includes('quota') || 
         errorMessage.includes('rate limit') ||
         errorMessage.includes('billing') ||
         errorString.includes('insufficient_quota')) {
@@ -161,7 +161,7 @@ Example:
     } else {
       console.error('Error setting up Puter API request:', error.message);
     }
-
+    
     throw new Error('Failed to generate quiz questions using Puter API. Please check the server console for details. The endpoint may need to be updated based on Puter\'s actual API structure.');
   }
 }
