@@ -1,4 +1,4 @@
-const { generateQuizQuestions } = require('../utils/aiService');
+const { generateQuizQuestions } = require('../utils/geminiService');
 
 /**
  * Generate quiz questions using AI
