@@ -1,14 +1,12 @@
-# Quiz Battle System - Admin Controlled Start
+# TODO: Replace aiService.js with Wikipedia-based Quiz Generation
 
-## Tasks
-- [x] Removed auto-start logic for all room types
-- [x] Admin/host must manually start quiz for all battle types (1v1 and multiplayer)
-- [x] Updated UI to show start button for all room types when host is present
-- [x] Standardized waiting room messages across all room types
+## Steps to Complete
+- [x] Update server/utils/aiService.js to implement Wikipedia-based quiz question generation
+- [x] Test the updated generateQuizQuestions function by running the server and verifying quiz generation
 
 ## Details
-The quiz system now requires the admin/host to manually start the quiz for all types of battles. This ensures consistent behavior across 1v1 and multiplayer rooms, giving the host full control over when the battle begins.
-
-## Files Modified
-- server/sockets/quizSocket.js: Removed auto-start logic from join-room event
-- client/pages/QuizRoom.jsx: Restored start button visibility for all room types and standardized messages
+- Replace Hugging Face API with Wikipedia summary fetching
+- Generate fill-in-the-blank questions by blanking words in sentences
+- Use simple options: correct word + ["Example", "Unknown", "None"]
+- Maintain output format: array of {question, options[4], correctAnswer}
+- Handle errors for missing topics or insufficient content
