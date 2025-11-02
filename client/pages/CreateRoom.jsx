@@ -138,7 +138,7 @@ const CreateRoom = () => {
             <p style={{color: 'var(--text-secondary)', marginBottom: '2rem'}}>
               Set up your quiz room and choose how to add questions
             </p>
-
+            
             <div style={{marginBottom: '1.5rem'}}>
               <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: '600'}}>
                 Room Name *
@@ -151,6 +151,38 @@ const CreateRoom = () => {
                 required
                 style={{width: '100%'}}
               />
+            </div>
+
+            <div style={{marginBottom: '1.5rem'}}>
+              <div style={{
+                padding: '1rem',
+                backgroundColor: 'var(--bg-secondary)',
+                borderRadius: 'var(--radius)',
+                border: '2px solid var(--primary-color)'
+              }}>
+                <div style={{fontSize: '1.2rem', fontWeight: 'bold', color: 'var(--primary-color)', marginBottom: '0.5rem'}}>
+                  ⚔️ Head-to-head battle (Selected)
+                </div>
+                <div style={{fontSize: '0.9rem', color: 'var(--text-secondary)'}}>
+                  Room Type: Multiplayer quiz battle
+                </div>
+              </div>
+            </div>
+
+            <div style={{marginBottom: '1.5rem'}}>
+              <div style={{
+                padding: '1rem',
+                backgroundColor: 'var(--bg-tertiary)',
+                borderRadius: 'var(--radius)',
+                border: '2px solid var(--primary-color)'
+              }}>
+                <div style={{fontSize: '1.2rem', fontWeight: 'bold', color: 'var(--primary-color)', marginBottom: '0.5rem'}}>
+                  ✍️ Manual (Selected)
+                </div>
+                <div style={{fontSize: '0.9rem', color: 'var(--text-secondary)'}}>
+                  Question Type: Add questions yourself
+                </div>
+              </div>
             </div>
 
             <div style={{display: 'flex', justifyContent: 'flex-end', gap: '1rem', marginTop: '2rem'}}>
