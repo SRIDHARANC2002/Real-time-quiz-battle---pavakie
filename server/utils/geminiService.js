@@ -22,7 +22,8 @@ async function generateQuizQuestions(topic, numQuestions = 10) {
       throw new Error('Gemini API key not configured. Please add GEMINI_API_KEY to your .env file.');
     }
 
-    const model = genAI.getGenerativeModel({ model: 'gemini-pro' });
+   const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
+ 
 
     const prompt = `Generate ${numQuestions} quiz questions about ${topic}. 
     
