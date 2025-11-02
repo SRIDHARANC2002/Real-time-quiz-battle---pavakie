@@ -465,7 +465,7 @@ const AIQuestionInput = ({ questions, setQuestions, onNext, onBack }) => {
     try {
       // Use server-side AI service instead of client-side Puter.js
       const token = localStorage.getItem('token');
-      const response = await fetch(`${import.meta.env.VITE_API_URL || 'https://real-time-quiz-battle-pavakie.onrender.com'}/api/quiz/generate`, {
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000'}/api/quiz/generate`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

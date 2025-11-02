@@ -1,6 +1,5 @@
 const Room = require('../models/Room');
 const MatchHistory = require('../models/MatchHistory');
-const defaultQuestions = require('../utils/quizQuestions');
 
 // Store player scores per room (in-memory for real-time updates)
 const roomScores = new Map(); // roomId -> { userId: score }
@@ -90,11 +89,7 @@ module.exports = (io) => {
           };
         } else {
           roomQuiz = {
-            questions: defaultQuestions.map((q, idx) => ({
-              question: q.question,
-              options: q.options,
-              correctAnswer: q.correctAnswer
-            })),
+            questions: [],
             currentQuestion: 0,
             isActive: false
           };

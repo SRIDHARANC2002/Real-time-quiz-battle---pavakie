@@ -1,7 +1,9 @@
+
+
 const { generateQuizQuestions } = require('../utils/geminiService');
 
 /**
- * Generate quiz questions using AI
+ * Generate quiz questions using Puter AI
  * POST /api/quiz/generate
  */
 exports.generateQuiz = async (req, res) => {
@@ -12,15 +14,15 @@ exports.generateQuiz = async (req, res) => {
   }
 
   try {
-    const questions = await generateQuizQuestions(topic, numQuestions || 10);
-    res.json({ questions });
+    const questions = await generateQuizQuestions(topic, numQuestions || 5);
+    res.json({
+      message: 'Questions generated successfully',
+      questions
+    });
   } catch (error) {
     console.error('Error generating quiz:', error);
-    console.error('Error stack:', error.stack);
-    // Send detailed error message to help with debugging
-    const errorMessage = error.message || 'Failed to generate quiz questions';
-    res.status(500).json({ 
-      message: errorMessage,
+    res.status(500).json({
+      message: 'Failed to generate quiz questions',
       details: process.env.NODE_ENV === 'development' ? error.stack : undefined
     });
   }

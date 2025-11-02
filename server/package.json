@@ -8,16 +8,14 @@
     "dev": "nodemon server.js"
   },
   "dependencies": {
-    "@google/generative-ai": "^0.24.1",
+    "@google/generative-ai": "^0.21.0",
     "axios": "^1.13.1",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "dotenv": "^17.2.3",
     "express": "^4.18.2",
-    "gooogle": "file:../../../../../generative-ai",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^7.5.3",
-    "openai": "^6.7.0",
     "socket.io": "^4.7.2"
   },
   "devDependencies": {

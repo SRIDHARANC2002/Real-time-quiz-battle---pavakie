@@ -1,100 +1,107 @@
-const { GoogleGenerativeAI } = require('@google/generative-ai');
-
-// Initialize Gemini AI with API key
-const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
-if (!GEMINI_API_KEY) {
-  console.error('⚠️  WARNING: GEMINI_API_KEY not found in environment variables!');
-  console.error('AI question generation will not work. Please add your API key to server/.env');
-}
-
-const genAI = GEMINI_API_KEY ? new GoogleGenerativeAI(GEMINI_API_KEY) : null;
+// geminiService.js
+require('dotenv').config();
+const axios = require('axios');
 
 /**
- * Generate quiz questions using Google Gemini AI
- * @param {string} topic - The topic for the quiz
+ * Generate quiz questions using Open Trivia Database API
+ * @param {string} topic - The topic for the quiz (mapped to predefined categories)
  * @param {number} numQuestions - Number of questions to generate
  * @returns {Promise<Array>} Array of quiz questions
  */
 async function generateQuizQuestions(topic, numQuestions = 10) {
   try {
-    // Check if API key is configured
-    if (!genAI) {
-      throw new Error('Gemini API key not configured. Please add GEMINI_API_KEY to your .env file.');
+    // Map topic to Open Trivia Database category ID
+    const categoryMap = {
+      'general knowledge': 9,
+      'science': 17,
+      'history': 23,
+      'geography': 22,
+      'sports': 21,
+      'entertainment': 11,
+      'art': 25,
+      'politics': 24,
+      'technology': 18,
+      'animals': 27,
+      'vehicles': 28,
+      'mythology': 20,
+      'celebrities': 26,
+      'books': 10,
+      'music': 12,
+      'movies': 11,
+      'tv': 14,
+      'games': 15,
+      'comics': 29,
+      'gadgets': 30,
+      'anime': 31,
+      'cartoon': 32,
+    };
+
+    // Find category ID or default to General Knowledge (9)
+    const categoryId = categoryMap[topic.toLowerCase()] || 9;
+
+    // 🔹 Use Open Trivia Database API
+    const response = await axios.get(
+      `https://opentdb.com/api.php?amount=${numQuestions}&category=${categoryId}&difficulty=easy&type=multiple`
+    );
+
+    if (response.data.response_code !== 0) {
+      throw new Error(`Open Trivia Database API error: ${response.data.response_code}`);
     }
 
-    const model = genAI.getGenerativeModel({ model: 'gemini-pro' });
+    const questions = response.data.results.map((q) => {
+      // Decode HTML entities using simple regex (for Node.js compatibility)
+      const decodeHtml = (html) => {
+        return html
+          .replace(/"/g, '"')
+          .replace(/&#039;/g, "'")
+          .replace(/&amp;/g, '&')
+          .replace(/</g, '<')
+          .replace(/>/g, '>')
+          .replace(/&hellip;/g, '…')
+          .replace(/&ldquo;/g, '"')
+          .replace(/&rdquo;/g, '"')
+          .replace(/&lsquo;/g, "'")
+          .replace(/&rsquo;/g, "'")
+          .replace(/&mdash;/g, '—')
+          .replace(/&ndash;/g, '–');
+      };
 
-    const prompt = `Generate ${numQuestions} quiz questions about ${topic}. 
-    
-Each question should have:
-- A clear question text
-- Exactly 4 multiple choice options labeled A, B, C, D
-- One correct answer marked with an asterisk (*)
+      const question = decodeHtml(q.question);
+      const correctAnswer = decodeHtml(q.correct_answer);
+      const incorrectAnswers = q.incorrect_answers.map(decodeHtml);
 
-Format each question as a JSON object with this exact structure:
-{
-  "question": "Question text here",
-  "options": ["Option A", "Option B", "Option C", "Option D"],
-  "correctAnswer": 0
-}
+      // Combine and shuffle options
+      const options = [correctAnswer, ...incorrectAnswers];
+      const shuffledOptions = options.sort(() => Math.random() - 0.5);
 
-Where correctAnswer is the index (0-3) of the correct option.
+      // Find index of correct answer
+      const correctAnswerIndex = shuffledOptions.indexOf(correctAnswer);
 
-Return ONLY a valid JSON array of question objects, no additional text or explanation.
+      return {
+        question,
+        options: shuffledOptions,
+        correctAnswer: correctAnswerIndex,
+      };
+    });
 
-Example:
-[
-  {
-    "question": "What is the capital of France?",
-    "options": ["London", "Berlin", "Paris", "Madrid"],
-    "correctAnswer": 2
-  }
-]`;
-
-    const result = await model.generateContent(prompt);
-    const response = await result.response;
-    const text = response.text();
-    
-    // Extract JSON from the response (might have markdown code blocks)
-    let jsonText = text.trim();
-    if (jsonText.startsWith('```json')) {
-      jsonText = jsonText.replace('```json', '').replace('```', '').trim();
-    } else if (jsonText.startsWith('```')) {
-      jsonText = jsonText.replace('```', '').replace('```', '').trim();
-    }
-
-    const questions = JSON.parse(jsonText);
-    
-    // Validate structure
-    if (!Array.isArray(questions)) {
-      throw new Error('Response is not an array');
-    }
+    // validate
+    if (!Array.isArray(questions)) throw new Error('Response is not an array');
+    questions.forEach((q, i) => {
+      if (
+        !q.question ||
+        !Array.isArray(q.options) ||
+        q.options.length !== 4 ||
+        typeof q.correctAnswer !== 'number'
+      ) {
+        throw new Error(`Question at index ${i} invalid format`);
+      }
+    });
 
     return questions;
-  } catch (error) {
-    console.error('Error generating quiz questions:', error);
-    console.error('Error details:', JSON.stringify(error, null, 2));
-    
-    // Check for API key errors - check multiple possible error formats
-    const errorString = JSON.stringify(error).toLowerCase();
-    const errorMessage = error.message?.toLowerCase() || '';
-    
-    if (error.status === 400 || 
-        errorMessage.includes('api key') || 
-        errorMessage.includes('api_key_invalid') ||
-        errorString.includes('api_key_invalid') ||
-        error.errorDetails?.some(detail => detail.reason === 'API_KEY_INVALID') ||
-        errorString.includes('api key not valid')) {
-      throw new Error('Invalid API key. Please check your Gemini API key in the server configuration.');
-    }
-    
-    if (error.message?.includes('quota') || error.message?.includes('rate limit')) {
-      throw new Error('API quota exceeded. Please try again later or upgrade your plan.');
-    }
-    
-    throw new Error('Failed to generate quiz questions. Please try again.');
+  } catch (err) {
+    console.error('❌ Error generating quiz questions via Open Trivia Database:', err.message);
+    throw new Error('Failed to generate quiz questions using Open Trivia Database');
   }
 }
 
 module.exports = { generateQuizQuestions };
-

@@ -1,7 +1,6 @@
 const Room = require('../models/Room');
 const MatchHistory = require('../models/MatchHistory');
 
-const defaultQuestions = require('../utils/quizQuestions');
 
 exports.createRoom = async (req, res) => {
   const { name, quiz } = req.body;

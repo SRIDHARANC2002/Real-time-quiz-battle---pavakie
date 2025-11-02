@@ -1,13 +1,7 @@
-# TODO: Change AI Service to Gemini
+# TODO: Update geminiService.js to use Open Trivia Database API
 
-## Steps to Complete
-- [x] Create server/.env file with GEMINI_API_KEY
-- [x] Update server/controllers/quizController.js to import from geminiService instead of aiService
-- [x] Test the updated generateQuizQuestions function by running the server and verifying quiz generation
-- [x] Commit and push all changes to GitHub
-
-## Details
-- Switched from Wikipedia-based quiz generation to Google Gemini AI
-- API key provided: AIzaSyBAV_h0d33FiYSHTGPzDEz1jTpCQ-THSk0
-- Maintain output format: array of {question, options[4], correctAnswer}
-- Handle errors for API key issues, quota limits, etc.
+- [x] Update the axios.get call to use Open Trivia Database API URL (https://opentdb.com/api.php)
+- [x] Map topic to predefined categories or use default (General Knowledge)
+- [x] Parse response to match required JSON format (shuffle options, set correctAnswer index)
+- [x] Decode HTML entities in questions and answers
+- [x] Update error messages to reflect Open Trivia Database
