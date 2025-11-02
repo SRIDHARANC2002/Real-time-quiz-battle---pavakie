@@ -161,7 +161,7 @@ const CreateRoom = () => {
                 border: '2px solid var(--primary-color)'
               }}>
                 <div style={{fontSize: '1.2rem', fontWeight: 'bold', color: 'var(--primary-color)', marginBottom: '0.5rem'}}>
-                  ⚔️ Head-to-head battle (Selected)
+                  ⚔️ Head-to-head battle
                 </div>
                 <div style={{fontSize: '0.9rem', color: 'var(--text-secondary)'}}>
                   Room Type: Multiplayer quiz battle
@@ -177,7 +177,7 @@ const CreateRoom = () => {
                 border: '2px solid var(--primary-color)'
               }}>
                 <div style={{fontSize: '1.2rem', fontWeight: 'bold', color: 'var(--primary-color)', marginBottom: '0.5rem'}}>
-                  ✍️ Manual (Selected)
+                  ✍️ Manual
                 </div>
                 <div style={{fontSize: '0.9rem', color: 'var(--text-secondary)'}}>
                   Question Type: Add questions yourself
