@@ -8,7 +8,7 @@ const CreateRoom = () => {
   const [step, setStep] = useState(1); // 1: Setup, 2: Questions, 3: Preview
   const [roomName, setRoomName] = useState("");
   const [roomType, setRoomType] = useState("multiplayer"); // "multiplayer" only
-  const [questionType, setQuestionType] = useState(""); // "manual" or "ai"
+  const [questionType, setQuestionType] = useState("manual"); // "manual" only
   const [questions, setQuestions] = useState([]);
 
   const { socket } = useSocket();
@@ -19,14 +19,6 @@ const CreateRoom = () => {
     if (step === 1) {
       if (!roomName.trim()) {
         alert("Please enter a room name!");
-        return;
-      }
-      if (!roomType) {
-        alert("Please select a room type!");
-        return;
-      }
-      if (!questionType) {
-        alert("Please select a question type!");
         return;
       }
       setStep(2);
@@ -146,7 +138,7 @@ const CreateRoom = () => {
             <p style={{color: 'var(--text-secondary)', marginBottom: '2rem'}}>
               Set up your quiz room and choose how to add questions
             </p>
-            
+
             <div style={{marginBottom: '1.5rem'}}>
               <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: '600'}}>
                 Room Name *
@@ -159,55 +151,6 @@ const CreateRoom = () => {
                 required
                 style={{width: '100%'}}
               />
-            </div>
-
-            <div style={{marginBottom: '1.5rem'}}>
-              <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: '600'}}>
-                Room Type *
-              </label>
-              <div style={{display: 'grid', gridTemplateColumns: '1fr', gap: '1rem'}}>
-                <button
-                  type="button"
-                  onClick={() => setRoomType("multiplayer")}
-                  style={{
-                    padding: '2rem',
-                    border: roomType === "multiplayer" ? '3px solid var(--primary-color)' : '2px solid var(--border-color)',
-                    borderRadius: 'var(--radius)',
-                    backgroundColor: roomType === "multiplayer" ? 'var(--text-primary)' : 'white',
-                    cursor: 'pointer',
-                    transition: 'all 0.3s'
-                  }}
-                >
-                  <div style={{fontSize: '2rem', marginBottom: '0.5rem'}}>⚔️</div>
-                  <div style={{fontWeight: 'bold', marginBottom: '0.25rem'}}>Head-to-head battle</div>
-                </button>
-              </div>
-            </div>
-
-            <div style={{marginBottom: '1.5rem'}}>
-              <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: '600'}}>
-                Question Type *
-              </label>
-              <div style={{display: 'grid', gridTemplateColumns: '1fr', gap: '1rem'}}>
-                <button
-                  type="button"
-                  onClick={() => setQuestionType("manual")}
-                  style={{
-                    padding: '2rem',
-                    border: questionType === "manual" ? '3px solid var(--primary-color)' : '2px solid var(--border-color)',
-                    borderRadius: 'var(--radius)',
-                    backgroundColor: questionType === "manual" ? 'var(--bg-tertiary)' : 'white',
-                    cursor: 'pointer',
-                    transition: 'all 0.3s'
-                  }}
-                >
-                  <div style={{fontSize: '2rem', marginBottom: '0.5rem'}}>✍️</div>
-                  <div style={{fontWeight: 'bold', marginBottom: '0.25rem'}}>Manual</div>
-                  <div style={{fontSize: '0.9rem', color: 'var(--text-secondary)'}}>
-                    Add questions yourself
-                  </div>
-                </button>
-              </div>
             </div>
 
             <div style={{display: 'flex', justifyContent: 'flex-end', gap: '1rem', marginTop: '2rem'}}>
