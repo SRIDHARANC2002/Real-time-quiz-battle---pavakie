@@ -15,7 +15,7 @@ const app = express();
 const server = http.createServer(app);
 const io = socketIo(server, {
   cors: {
-    origin: ['https://quizbattle-alpha.vercel.app', 'http://localhost:5173', 'https://real-time-quiz-battle-pavakie.onrender.com'],
+    origin: ['https://quizbattle-alpha.vercel.app', 'http://localhost:5173', 'http://localhost:5174', 'https://real-time-quiz-battle-pavakie.onrender.com'],
     methods: ['GET', 'POST'],
     credentials: true,
   },
@@ -25,7 +25,7 @@ const io = socketIo(server, {
 connectDB();
 
 // Middleware
-app.use(cors({ origin: ['https://quizbattle-alpha.vercel.app', 'http://localhost:5173', 'https://real-time-quiz-battle-pavakie.onrender.com'] }));
+app.use(cors({ origin: ['https://quizbattle-alpha.vercel.app', 'http://localhost:5173', 'http://localhost:5174', 'https://real-time-quiz-battle-pavakie.onrender.com'] }));
 app.use(express.json());
 app.use(errorHandler);
 

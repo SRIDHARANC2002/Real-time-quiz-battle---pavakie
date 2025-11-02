@@ -7,7 +7,7 @@ import { api } from "../utils/api";
 const CreateRoom = () => {
   const [step, setStep] = useState(1); // 1: Setup, 2: Questions, 3: Preview
   const [roomName, setRoomName] = useState("");
-  const [roomType, setRoomType] = useState(""); // "1v1" or "multiplayer"
+  const [roomType, setRoomType] = useState("multiplayer"); // "multiplayer" only
   const [questionType, setQuestionType] = useState(""); // "manual" or "ai"
   const [questions, setQuestions] = useState([]);
 
@@ -165,26 +165,7 @@ const CreateRoom = () => {
               <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: '600'}}>
                 Room Type *
               </label>
-              <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem'}}>
-                <button
-                  type="button"
-                  onClick={() => setRoomType("1v1")}
-                  style={{
-                    padding: '2rem',
-                    border: roomType === "1v1" ? '3px solid var(--primary-color)' : '2px solid var(--border-color)',
-                    borderRadius: 'var(--radius)',
-                    backgroundColor: roomType === "1v1" ? 'var(--bg-tertiary)' : 'white',
-                    cursor: 'pointer',
-                    transition: 'all 0.3s'
-                  }}
-                >
-                  <div style={{fontSize: '2rem', marginBottom: '0.5rem'}}>⚔️</div>
-                  <div style={{fontWeight: 'bold', marginBottom: '0.25rem'}}>1 vs 1</div>
-                  <div style={{fontSize: '0.9rem', color: 'var(--text-secondary)'}}>
-                    Head-to-head battle
-                  </div>
-                </button>
-
+              <div style={{display: 'grid', gridTemplateColumns: '1fr', gap: '1rem'}}>
                 <button
                   type="button"
                   onClick={() => setRoomType("multiplayer")}
@@ -192,16 +173,13 @@ const CreateRoom = () => {
                     padding: '2rem',
                     border: roomType === "multiplayer" ? '3px solid var(--primary-color)' : '2px solid var(--border-color)',
                     borderRadius: 'var(--radius)',
-                    backgroundColor: roomType === "multiplayer" ? 'var(--bg-tertiary)' : 'white',
+                    backgroundColor: roomType === "multiplayer" ? 'var(--text-primary)' : 'white',
                     cursor: 'pointer',
                     transition: 'all 0.3s'
                   }}
                 >
-                  <div style={{fontSize: '2rem', marginBottom: '0.5rem'}}>👥</div>
-                  <div style={{fontWeight: 'bold', marginBottom: '0.25rem'}}>Multiplayer</div>
-                  <div style={{fontSize: '0.9rem', color: 'var(--text-secondary)'}}>
-                    Multiple players
-                  </div>
+                  <div style={{fontSize: '2rem', marginBottom: '0.5rem'}}>⚔️</div>
+                  <div style={{fontWeight: 'bold', marginBottom: '0.25rem'}}>Head-to-head battle</div>
                 </button>
               </div>
             </div>
@@ -292,9 +270,10 @@ const CreateRoom = () => {
                 padding: '1rem',
                 backgroundColor: 'var(--bg-secondary)',
                 borderRadius: 'var(--radius)',
-                marginBottom: '1rem'
+                marginBottom: '1rem',
+                color: 'black'
               }}>
-                <strong>Room Type:</strong> {roomType === '1v1' ? '1 vs 1' : 'Multiplayer'}
+                <strong>Room Type:</strong> Head-to-head battle
               </div>
               
               <div style={{maxHeight: '400px', overflowY: 'auto'}}>
