@@ -481,7 +481,8 @@ const AIQuestionInput = ({ questions, setQuestions, onNext, onBack }) => {
         throw new Error(`Server responded with ${response.status}: ${response.statusText}`);
       }
 
-      const questions = await response.json();
+      const data = await response.json();
+      const questions = data.questions;
 
       // Validate structure
       if (!Array.isArray(questions)) {
