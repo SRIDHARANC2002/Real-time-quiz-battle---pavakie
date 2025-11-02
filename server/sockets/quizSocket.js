@@ -73,27 +73,6 @@ module.exports = (io) => {
         // Broadcast updated player list to all in room
         io.to(roomId).emit('scoreUpdate', players);
         io.to(roomId).emit('roomStatus', updatedRoom.quiz.isActive ? 'active' : 'waiting');
-
-        // Auto-start quiz for 1v1 rooms when exactly 2 players are present
-        if (updatedRoom.roomType === '1v1' && updatedRoom.participants.length === 1 && !updatedRoom.quiz.isActive) {
-          // Start the quiz automatically
-          updatedRoom.quiz.isActive = true;
-          updatedRoom.quiz.currentQuestion = 0;
-          await updatedRoom.save();
-
-          const firstQuestion = {
-            text: updatedRoom.quiz.questions[0].question,
-            options: updatedRoom.quiz.questions[0].options.map((opt, idx) => ({
-              id: idx,
-              text: opt
-            })),
-            questionNumber: 1,
-            totalQuestions: updatedRoom.quiz.questions.length
-          };
-
-          io.to(roomId).emit('quiz-started', firstQuestion);
-          io.to(roomId).emit('roomStatus', 'active');
-        }
       }
     });
 

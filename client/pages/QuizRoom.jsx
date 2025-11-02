@@ -52,7 +52,7 @@ export default function QuizRoom(){
               )}
             </div>
           </div>
-          {isHost && status === 'waiting' && room?.roomType !== '1v1' && (
+          {isHost && status === 'waiting' && (
             <div style={{display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '0.5rem'}}>
               <p style={{fontSize: '0.9rem', color: 'var(--text-secondary)', margin: '0', fontWeight: 'bold'}}>Room ID: <strong style={{color: 'var(--text-primary)'}}>{roomId}</strong></p>
               <button onClick={startQuiz} disabled={!socket?.connected}>
@@ -99,10 +99,7 @@ export default function QuizRoom(){
             </button>
           </div>
           <p style={{color: 'var(--text-secondary)', marginTop: '0.5rem'}}>
-            {room?.roomType === '1v1'
-              ? (isHost ? 'Waiting for another player to join. The quiz will start automatically!' : 'Waiting for the quiz to start automatically...')
-              : (isHost ? 'Click "Start Quiz" when all players have joined.' : 'Waiting for host to start the quiz...')
-            }
+            {isHost ? 'Click "Start Quiz" when all players have joined.' : 'Waiting for host to start the quiz...'}
           </p>
           <Scoreboard players={players} />
         </div>

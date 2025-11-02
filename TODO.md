@@ -1,17 +1,14 @@
-# Fix 1v1 Battle Auto-Start Issue
+# Quiz Battle System - Admin Controlled Start
 
 ## Tasks
-- [x] Modify server/sockets/quizSocket.js to auto-start quiz when 2 players join a 1v1 room
-- [x] Update client/pages/QuizRoom.jsx to hide start button for 1v1 rooms
-- [x] Update waiting room message for 1v1 rooms
-- [x] Test 1v1 room creation and joining
-- [x] Verify quiz auto-starts when second player joins
-- [x] Ensure multiplayer rooms still work with manual start
-- [x] Check score updates and battle functionality
+- [x] Removed auto-start logic for all room types
+- [x] Admin/host must manually start quiz for all battle types (1v1 and multiplayer)
+- [x] Updated UI to show start button for all room types when host is present
+- [x] Standardized waiting room messages across all room types
 
 ## Details
-The 1v1 battle wasn't working because there was no auto-start logic for 1v1 rooms. The quiz only started when the host manually clicked "Start Quiz", but for 1v1 battles, it should automatically start when both players join.
+The quiz system now requires the admin/host to manually start the quiz for all types of battles. This ensures consistent behavior across 1v1 and multiplayer rooms, giving the host full control over when the battle begins.
 
 ## Files Modified
-- server/sockets/quizSocket.js: Added auto-start logic in join-room event when 2 players are present in a 1v1 room
-- client/pages/QuizRoom.jsx: Conditionally hide start button for 1v1 rooms and updated waiting room messages
+- server/sockets/quizSocket.js: Removed auto-start logic from join-room event
+- client/pages/QuizRoom.jsx: Restored start button visibility for all room types and standardized messages
