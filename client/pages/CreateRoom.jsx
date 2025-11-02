@@ -461,84 +461,26 @@ const AIQuestionInput = ({ questions, setQuestions, onNext, onBack }) => {
       return;
     }
 
-    // Check if Puter.js is loaded
-    if (typeof window === 'undefined' || !window.puter || !window.puter.ai) {
-      alert("⚠️ Puter.js not loaded\n\nPlease make sure Puter.js is properly loaded. Refresh the page if the issue persists.");
-      return;
-    }
-
-    // Wait a bit for Puter to fully initialize (if needed)
-    // Puter.js might need time to authenticate/initialize
-    await new Promise(resolve => setTimeout(resolve, 500));
-
     setLoading(true);
     try {
-      const prompt = `Generate exactly ${numQuestions} quiz questions about "${topic}". 
+      // Use server-side AI service instead of client-side Puter.js
+      const response = await fetch(`${import.meta.env.VITE_API_URL || 'https://real-time-quiz-battle-pavakie.onrender.com'}/api/quiz/generate`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          topic: topic,
+          numQuestions: numQuestions
+        })
+      });
 
-Each question must have:
-- A clear question text
-- Exactly 4 multiple choice options
-- One correct answer
-
-Format each question as a JSON object with this exact structure:
-{
-  "question": "Question text here",
-  "options": ["Option A", "Option B", "Option C", "Option D"],
-  "correctAnswer": 0
-}
-
-Where correctAnswer is the index (0-3) of the correct option.
-
-Return ONLY a valid JSON array of question objects, no additional text, no markdown, no code blocks. Just the JSON array.
-
-Example:
-[
-  {
-    "question": "What is the capital of France?",
-    "options": ["London", "Berlin", "Paris", "Madrid"],
-    "correctAnswer": 2
-  }
-]`;
-
-      // Call Puter.js AI chat directly from frontend
-      const response = await window.puter.ai.chat(prompt, { model: "gpt-4o-mini" });
-      
-      // Log the response to debug
-      console.log('Puter AI response:', response);
-      console.log('Response type:', typeof response);
-      
-      // Extract text from response - Puter returns object with message.content
-      let jsonText;
-      if (typeof response === 'string') {
-        jsonText = response;
-      } else if (response && typeof response === 'object' && response.message && response.message.content) {
-        // Puter AI response structure: { message: { content: "JSON string" } }
-        jsonText = response.message.content;
-      } else {
-        jsonText = String(response);
+      if (!response.ok) {
+        throw new Error(`Server responded with ${response.status}: ${response.statusText}`);
       }
 
-      // Convert to string and trim
-      if (typeof jsonText !== 'string') {
-        jsonText = String(jsonText);
-      }
-      jsonText = jsonText.trim();
+      const questions = await response.json();
 
-      // Remove markdown code blocks if present
-      if (jsonText.startsWith('```json')) {
-        jsonText = jsonText.replace('```json', '').replace('```', '').trim();
-      } else if (jsonText.startsWith('```')) {
-        jsonText = jsonText.replace('```', '').replace('```', '').trim();
-      }
-
-      // Try to find JSON array in the response
-      const jsonMatch = jsonText.match(/\[[\s\S]*\]/);
-      if (jsonMatch) {
-        jsonText = jsonMatch[0];
-      }
-
-      const questions = JSON.parse(jsonText);
-      
       // Validate structure
       if (!Array.isArray(questions)) {
         throw new Error('Response is not an array');
@@ -559,7 +501,7 @@ Example:
     } catch (error) {
       console.error('Error generating questions:', error);
       const errorMessage = error?.message || "Failed to generate questions.";
-      
+
       if (errorMessage.includes('JSON') || errorMessage.includes('parse')) {
         alert("⚠️ Failed to parse AI response\n\nThe AI generated invalid JSON. Please try again.\n\n💡 Tip: You can still create quizzes manually by selecting 'Manual' question type.");
       } else if (errorMessage.includes('not an array')) {
