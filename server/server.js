@@ -15,8 +15,9 @@ const app = express();
 const server = http.createServer(app);
 const io = socketIo(server, {
   cors: {
-    origin: '*',
+    origin: 'https://quizbattle-alpha.vercel.app',
     methods: ['GET', 'POST'],
+    credentials: true,
   },
 });
 
@@ -24,7 +25,7 @@ const io = socketIo(server, {
 connectDB();
 
 // Middleware
-app.use(cors({ origin: '*' }));
+app.use(cors({ origin: 'https://quizbattle-alpha.vercel.app' }));
 app.use(express.json());
 app.use(errorHandler);
 
