@@ -6,16 +6,16 @@
 }
 
 :root {
-  --primary-color: #6366f1;
-  --primary-dark: #4f46e5;
-  --primary-light: #818cf8;
-  --secondary-color: #8b5cf6;
-  --success-color: #10b981;
+  --primary-color: #0052CC;
+  --primary-dark: #003d99;
+  --primary-light: #3385ff;
+  --secondary-color: #36B37E;
+  --success-color: #36B37E;
   --danger-color: #ef4444;
-  --warning-color: #f59e0b;
-  --text-primary: #1f2937;
+  --warning-color: #FFAB00;
+  --text-primary: #000000;
   --text-secondary: #6b7280;
-  --bg-primary: #ffffff;
+  --bg-primary: #F5F7FA;
   --bg-secondary: #f9fafb;
   --bg-tertiary: #f3f4f6;
   --border-color: #e5e7eb;
@@ -34,7 +34,7 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: var(--bg-primary);
   min-height: 100vh;
   color: var(--text-primary);
   line-height: 1.6;
@@ -190,7 +190,7 @@ input, textarea, select {
 input:focus, textarea:focus, select:focus {
   outline: none;
   border-color: var(--primary-color);
-  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+  box-shadow: 0 0 0 3px rgba(0, 82, 204, 0.1);
 }
 
 input::placeholder {
@@ -476,7 +476,7 @@ form > div {
 .action-card:hover {
   transform: translateY(-4px);
   box-shadow: var(--shadow-xl);
-  background: linear-gradient(135deg, rgba(99, 102, 241, 0.05), rgba(139, 92, 246, 0.05));
+  background: linear-gradient(135deg, rgba(0, 82, 204, 0.05), rgba(54, 179, 126, 0.05));
 }
 
 .action-icon {
