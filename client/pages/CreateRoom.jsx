@@ -188,7 +188,7 @@ const CreateRoom = () => {
               <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: '600'}}>
                 Question Type *
               </label>
-              <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem'}}>
+              <div style={{display: 'grid', gridTemplateColumns: '1fr', gap: '1rem'}}>
                 <button
                   type="button"
                   onClick={() => setQuestionType("manual")}
@@ -205,25 +205,6 @@ const CreateRoom = () => {
                   <div style={{fontWeight: 'bold', marginBottom: '0.25rem'}}>Manual</div>
                   <div style={{fontSize: '0.9rem', color: 'var(--text-secondary)'}}>
                     Add questions yourself
-                  </div>
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => setQuestionType("ai")}
-                  style={{
-                    padding: '2rem',
-                    border: questionType === "ai" ? '3px solid var(--primary-color)' : '2px solid var(--border-color)',
-                    borderRadius: 'var(--radius)',
-                    backgroundColor: questionType === "ai" ? 'var(--bg-tertiary)' : 'white',
-                    cursor: 'pointer',
-                    transition: 'all 0.3s'
-                  }}
-                >
-                  <div style={{fontSize: '2rem', marginBottom: '0.5rem'}}>🤖</div>
-                  <div style={{fontWeight: 'bold', marginBottom: '0.25rem'}}>AI Generated</div>
-                  <div style={{fontSize: '0.9rem', color: 'var(--text-secondary)'}}>
-                    Let AI create questions
                   </div>
                 </button>
               </div>
@@ -243,10 +224,6 @@ const CreateRoom = () => {
         {/* Step 2: Questions Input */}
         {step === 2 && questionType === "manual" && (
           <QuestionInput questions={questions} setQuestions={setQuestions} onNext={handleNext} onBack={handleBack} />
-        )}
-
-        {step === 2 && questionType === "ai" && (
-          <AIQuestionInput questions={questions} setQuestions={setQuestions} onNext={handleNext} onBack={handleBack} />
         )}
 
         {/* Step 3: Preview */}
@@ -428,166 +405,6 @@ const QuestionInput = ({ questions, setQuestions, onNext, onBack }) => {
   );
 };
 
-// AI Question Input Component
-const AIQuestionInput = ({ questions, setQuestions, onNext, onBack }) => {
-  const [topic, setTopic] = useState("");
-  const [numQuestions, setNumQuestions] = useState(10);
-  const [loading, setLoading] = useState(false);
 
-  const handleGenerate = async () => {
-    if (!topic.trim()) {
-      alert("Please enter a topic!");
-      return;
-    }
-
-    setLoading(true);
-    try {
-      // Use server-side AI service instead of client-side Puter.js
-      const token = localStorage.getItem('token');
-      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000'}/api/quiz/generate`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          topic: topic,
-          numQuestions: numQuestions
-        })
-      });
-
-      if (!response.ok) {
-        throw new Error(`Server responded with ${response.status}: ${response.statusText}`);
-      }
-
-      const data = await response.json();
-      const questions = data.questions;
-
-      // Validate structure
-      if (!Array.isArray(questions)) {
-        throw new Error('Response is not an array');
-      }
-
-      // Validate each question has required fields
-      questions.forEach((q, idx) => {
-        if (!q.question || !Array.isArray(q.options) || q.options.length !== 4 || typeof q.correctAnswer !== 'number') {
-          throw new Error(`Question ${idx + 1} is missing required fields`);
-        }
-        if (q.correctAnswer < 0 || q.correctAnswer > 3) {
-          throw new Error(`Question ${idx + 1} has invalid correctAnswer index`);
-        }
-      });
-
-      setQuestions(questions);
-      alert(`✅ Generated ${questions.length} questions successfully!`);
-    } catch (error) {
-      console.error('Error generating questions:', error);
-      const errorMessage = error?.message || "Failed to generate questions.";
-
-      if (errorMessage.includes('JSON') || errorMessage.includes('parse')) {
-        alert("⚠️ Failed to parse AI response\n\nThe AI generated invalid JSON. Please try again.\n\n💡 Tip: You can still create quizzes manually by selecting 'Manual' question type.");
-      } else if (errorMessage.includes('not an array')) {
-        alert("⚠️ Invalid response format\n\nThe AI didn't return questions in the expected format. Please try again.\n\n💡 Tip: You can still create quizzes manually by selecting 'Manual' question type.");
-      } else {
-        alert(`❌ ${errorMessage}\n\n💡 You can still create quizzes manually by selecting 'Manual' question type.`);
-      }
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleEditQuestion = (index) => {
-    const newQuestions = [...questions];
-    newQuestions[index] = { ...questions[index] };
-    setQuestions(newQuestions);
-  };
-
-  const handleDeleteQuestion = (index) => {
-    if (confirm("Are you sure you want to delete this question?")) {
-      setQuestions(questions.filter((_, i) => i !== index));
-    }
-  };
-
-  return (
-    <div className="card">
-      <h2>Generate Questions with AI</h2>
-      <p style={{color: 'var(--text-secondary)', marginBottom: '2rem'}}>
-        Use AI to automatically generate quiz questions on any topic
-      </p>
-
-      <div style={{marginBottom: '1.5rem'}}>
-        <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: '600'}}>
-          Quiz Topic
-        </label>
-        <input
-          type="text"
-          placeholder="e.g., World War II, JavaScript Basics, Biology"
-          value={topic}
-          onChange={(e) => setTopic(e.target.value)}
-          required
-          style={{width: '100%'}}
-        />
-      </div>
-
-      <div style={{marginBottom: '1.5rem'}}>
-        <label style={{display: 'block', marginBottom: '0.5rem', fontWeight: '600'}}>
-          Number of Questions
-        </label>
-        <input
-          type="number"
-          min="1"
-          max="20"
-          value={numQuestions}
-          onChange={(e) => setNumQuestions(parseInt(e.target.value) || 1)}
-          style={{width: '100%'}}
-        />
-      </div>
-
-      <button 
-        type="button" 
-        onClick={handleGenerate} 
-        disabled={loading}
-        style={{width: '100%', marginBottom: '2rem'}}
-      >
-        {loading ? '⏳ Generating...' : '🤖 Generate Questions'}
-      </button>
-
-      {questions.length > 0 && (
-        <div style={{marginBottom: '2rem'}}>
-          <div style={{fontWeight: 'bold', marginBottom: '1rem'}}>
-            Generated Questions ({questions.length})
-          </div>
-          <div style={{maxHeight: '300px', overflowY: 'auto'}}>
-            {questions.map((q, index) => (
-              <div key={index} style={{
-                padding: '0.75rem',
-                border: '1px solid var(--border-color)',
-                borderRadius: 'var(--radius)',
-                marginBottom: '0.5rem',
-                backgroundColor: 'var(--bg-secondary)'
-              }}>
-                <div style={{fontWeight: 'bold', marginBottom: '0.25rem'}}>
-                  Q{index + 1}: {q.question}
-                </div>
-                <div style={{fontSize: '0.9rem', color: 'var(--text-secondary)'}}>
-                  Answer: {q.options[q.correctAnswer]} (Option {String.fromCharCode(65 + q.correctAnswer)})
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-
-      <div style={{display: 'flex', justifyContent: 'space-between', gap: '1rem', marginTop: '2rem'}}>
-        <button type="button" onClick={onBack} className="secondary">
-          ← Back
-        </button>
-        <button type="button" onClick={onNext} disabled={questions.length === 0}>
-          Next → ({questions.length} questions)
-        </button>
-      </div>
-    </div>
-  );
-};
 
 export default CreateRoom;
